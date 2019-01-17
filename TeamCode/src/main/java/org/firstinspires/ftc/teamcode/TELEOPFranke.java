@@ -21,6 +21,24 @@ public class TELEOPFranke extends OpMode {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void loop() {
+
+        telemetry.addData("tickA",bot.tickA);
+        telemetry.addData("tickB",bot.tickB);
+        telemetry.addData("tickC",bot.tickC);
+        telemetry.addData("tickD",bot.tickD);
+        telemetry.update();
+
+        bot.tickA = bot.left_front.getCurrentPosition();
+        bot.tickB = bot.right_front.getCurrentPosition();
+        bot.tickC = bot.left_rear.getCurrentPosition();
+        bot.tickD = bot.right_rear.getCurrentPosition();
+        if (gamepad1.x){
+            bot.tickA=0;
+            bot.tickB=0;
+            bot.tickC=0;
+            bot.tickD=0;
+        }
+
         bot.MecanumDrive_Cartesian(-gamepad1.right_stick_x,gamepad1.right_stick_y,-gamepad1.left_stick_x);
 
         double plePower =-0.5*gamepad2.right_stick_y;

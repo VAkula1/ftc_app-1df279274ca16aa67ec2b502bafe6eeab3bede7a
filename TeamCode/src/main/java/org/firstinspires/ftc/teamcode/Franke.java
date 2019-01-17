@@ -13,6 +13,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Franke {
     HardwareMap hardwareMap =  null;
 
+
+    int tickA;
+    int tickB;
+    int tickC;
+    int tickD;
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor left_rear = null;
     DcMotor right_rear = null;
@@ -49,6 +54,21 @@ public class Franke {
         right_rear = hardwareMap.get(DcMotor.class, "right_rear");
         left_front = hardwareMap.get(DcMotor.class, "left_front");
         right_front = hardwareMap.get(DcMotor.class, "right_front");
+
+        right_front.setPower(0);
+        left_front.setPower(0);
+        right_rear.setPower(0);
+        left_rear.setPower(0);
+
+        right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_rear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_rear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         pleDrive = hardwareMap.get(DcMotor.class, "ple_drive");
         vdvig = hardwareMap.get(DcMotor.class, "vdvig_drive");

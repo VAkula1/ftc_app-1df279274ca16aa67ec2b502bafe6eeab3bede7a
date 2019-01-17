@@ -67,6 +67,10 @@ public class for_proverka extends LinearOpMode {
     private DcMotor pleDrive = null;
 
     int tick;
+    int tickA;
+    int tickB;
+    int tickC;
+    int tickD;
     final int TickM = 100;
     final int AgileCon = 90;
     double TimeCon = 1.4;
@@ -174,8 +178,19 @@ public class for_proverka extends LinearOpMode {
         right_front.setDirection(DcMotor.Direction.REVERSE);
 
         right_front.setPower(0);
+        left_front.setPower(0);
+        right_rear.setPower(0);
+        left_rear.setPower(0);
+
         right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_rear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_rear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         /*lift  = hardwareMap.get(DcMotor.class, "lift");
 
@@ -206,9 +221,22 @@ public class for_proverka extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addData("tickA",tickA);
+            telemetry.addData("tickB",tickB);
+            telemetry.addData("tickC",tickC);
+            telemetry.addData("tickD",tickD);
+            telemetry.update();
 
-            turn(90);
-
+            tickA = left_front.getCurrentPosition();
+            tickB = right_front.getCurrentPosition();
+            tickC = left_rear.getCurrentPosition();
+            tickD = right_rear.getCurrentPosition();
+            if (gamepad1.x){
+                tickA=0;
+                tickB=0;
+                tickC=0;
+                tickD=0;
+            }
         }
     }
 }
