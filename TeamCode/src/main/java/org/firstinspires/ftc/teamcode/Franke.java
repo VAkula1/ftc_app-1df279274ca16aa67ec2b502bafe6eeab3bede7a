@@ -95,11 +95,12 @@ public class Franke {
 
         normalize(wheelSpeeds);
 
-        left_front.setPower(wheelSpeeds[0]*0.9);
-        right_front.setPower(wheelSpeeds[1]*0.85);
-        left_rear.setPower(wheelSpeeds[2]);
-        right_rear.setPower(wheelSpeeds[3]*0.9);
+        left_front.setPower(wheelSpeeds[0]*0.6);
+        right_front.setPower(wheelSpeeds[1]*1.2);
+        left_rear.setPower(wheelSpeeds[2]*1.2);
+        right_rear.setPower(wheelSpeeds[3]*0.6);
     }
+
     private void normalize(double[] wheelSpeeds) {
         double maxMagnitude = Math.abs(wheelSpeeds[0]);
 
@@ -172,3 +173,5 @@ public class Franke {
     void Vdvig (double vdvigPower){
         vdvig.setPower(vdvigPower);
     }}
+
+    //здесь кончается прекрассное

@@ -39,7 +39,7 @@ public class TELEOPFranke extends OpMode {
             bot.tickD=0;
         }
 
-        bot.MecanumDrive_Cartesian(-gamepad1.right_stick_x,gamepad1.right_stick_y,-gamepad1.left_stick_x);
+        bot.MecanumDrive_Cartesian(-gamepad1.right_stick_y,gamepad1.left_stick_x,-gamepad1.right_stick_x);
 
         double plePower =-0.5*gamepad2.right_stick_y;
         double vdvig = 0.5*gamepad2.left_stick_x;
@@ -50,7 +50,6 @@ public class TELEOPFranke extends OpMode {
 
         bot.Plecho(plePower);
         bot.Vdvig(vdvig);
-
 //        if (bot.TouchLift.getState() == true) {
 //            bot.lift.setPower(0);
 //            telemetry.addData("TouchLift", "Is Not Pressed"); }

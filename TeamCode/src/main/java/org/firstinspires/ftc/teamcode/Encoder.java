@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -171,6 +174,13 @@ public class Encoder extends LinearOpMode {
                                             robot.rightDrive.getCurrentPosition());
                 telemetry.update();
             }
+
+            MotionProfile profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(0, 0, 0,0), // start state
+                    new MotionState(10, 0, 0,0), // goal state
+                    5, // max vel
+                    5 // max accel
+            );
 
             // Stop all motion;
             robot.leftDrive.setPower(0);
