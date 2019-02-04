@@ -1,32 +1,33 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.EncoderDrive;
 
 import android.os.SystemClock;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-public class Franke {
+public class EncoderLib {
     HardwareMap hardwareMap =  null;
 
-
-    int tickA;
-    int tickB;
-    int tickC;
-    int tickD;
+    double CD[] = new double[4];
+    double CD0;double CD1;double CD2;double CD3;
+    double lastTime;double curTime;
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor left_rear = null;
     DcMotor right_rear = null;
     DcMotor left_front = null;
     DcMotor right_front = null;
-
+    double[] tick = new double[4];
+    double[] lTick = new double[4];
+    double[] curSPD = new double[4];
+    double inWheelPows[] = new double[4];
+    double lasWheelPows[] = new double[4];
+    double curWheelPows[] = new double[4];
+    double norWheelPows[] = new double[4];
     DcMotor pleDrive = null;
     DcMotor vdvig = null;
-
+    double global;
     DcMotor lift = null;
 
     DcMotor sosat = null;
@@ -40,7 +41,6 @@ public class Franke {
     int costlV = 0;
     int costlVi = 0;
     double test=0;
-
     //библиотека функций
     public void init(HardwareMap hardwareMap) {
 //        TouchLift = hardwareMap.get(DigitalChannel.class, "TouchLift");
@@ -84,21 +84,73 @@ public class Franke {
         right_rear.setDirection(DcMotor.Direction.REVERSE);
         left_front.setDirection(DcMotor.Direction.FORWARD);
         right_front.setDirection(DcMotor.Direction.REVERSE);
+        lTick[0]=0;lTick[1]=0;lTick[2]=0;lTick[3]=0;
+        curSPD[0]=0;curSPD[1]=0;curSPD[2]=0;curSPD[3]=0;
+        CD[0] =0;CD[1] =0;CD[2] =0;CD[3] =0;
+        CD0 = 0;CD1 = 0;CD2 = 0;CD3 = 0;
     }
+
+//    public void getSPD(int nomOfEncoder){
+//        if (curTime-lastTime>0.1){
+//            curSPD[nomOfEncodor]=Math.abs((tick[nomOfEncodor]-lTick[nomOfEncodor])/(curTime-lastTime));
+//            lastTime=curTime;lTick[nomOfEncodor]=tick[nomOfEncodor];
+//        }
+//    }
+
+    public void getSPD(){
+        if (curTime-lastTime>0.1){
+            for(int nomOfEncoder=0;nomOfEncoder<4;nomOfEncoder++){
+                curSPD[nomOfEncoder]=Math.abs((tick[nomOfEncoder]-lTick[nomOfEncoder])/(curTime-lastTime));
+                lTick[nomOfEncoder]=tick[nomOfEncoder];lasWheelPows[nomOfEncoder]=inWheelPows[nomOfEncoder];
+            }
+            lastTime=curTime;
+            }
+        }
+
+
+
+//    public void getSPD(){
+//        if (curTime-lastTime>0.1){
+//            curSPDA=Math.abs((tickA-lTickA)/(curTime-lastTime));
+//            curSPDB=Math.abs((tickB-lTickB)/(curTime-lastTime));
+//            curSPDC=Math.abs((tickC-lTickC)/(curTime-lastTime));
+//            curSPDD=Math.abs((tickD-lTickD)/(curTime-lastTime));
+//            lastTime=curTime;lTickA=tickA;lTickB=tickB;lTickC=tickC;lTickD=tickD;
+//        }
+//    }
+
+//    public double NormlazeSPD(){
+//        double
+//        if
+//    }
+
+
+    public void SetDC(boolean mode,boolean x,boolean y,boolean a,boolean b){
+        if (mode) {
+
+            if (x) {CD0 =-0.25;CD1 =0.25;CD2 =0.25;CD3 =-0.25;}
+            if (y) {CD0 =0.25;CD1 =0.25;CD2 =0.25;CD3 =0.25;}
+            if (a) {CD0 =-0.25;CD1 =-0.25;CD2 =-0.25;CD3 =-0.25; }
+            if (b) {CD0 =0.25;CD1 =-0.25;CD2 =-0.25;CD3 =0.25;}
+        }
+        else CD0 =0;CD1 =0;CD2 =0;CD3 =0;
+
+    }
+
     public void MecanumDrive_Cartesian(double x, double y, double rotation) {
         double wheelSpeeds[] = new double[4];
 
-        wheelSpeeds[0] = x + y + rotation;
+        wheelSpeeds[0] = x + y - rotation;
         wheelSpeeds[1] = -x + y - rotation;
         wheelSpeeds[2] = -x + y + rotation;
-        wheelSpeeds[3] = x + y - rotation;
+        wheelSpeeds[3] = x + y + rotation;
 
         normalize(wheelSpeeds);
 
-        left_front.setPower(wheelSpeeds[0]);
-        right_front.setPower(wheelSpeeds[1]);
-        left_rear.setPower(wheelSpeeds[2]);
-        right_rear.setPower(wheelSpeeds[3]);
+        left_front.setPower(wheelSpeeds[0]+CD0);
+        right_front.setPower(wheelSpeeds[1]+CD1);
+        left_rear.setPower(wheelSpeeds[2]+CD2);
+        right_rear.setPower(wheelSpeeds[3]+CD3);
     }
 
     private void normalize(double[] wheelSpeeds) {
@@ -122,6 +174,33 @@ public class Franke {
             }
         }
     }
+
+//    public void MecanumDrive_Cartesian(double x, double y, double rotation) {
+//
+//        inWheelPows[0] = x + y + rotation;
+//        inWheelPows[1] = -x + y - rotation;
+//        inWheelPows[2] = -x + y + rotation;
+//        inWheelPows[3] = x + y - rotation;
+//
+//        normalize(lasWheelPows);
+//
+//        left_front.setPower(curWheelPows[0]);
+//        right_front.setPower(curWheelPows[1]);
+//        left_rear.setPower(curWheelPows[2]);
+//        right_rear.setPower(curWheelPows[3]);
+//    }
+//
+//    private void normalize(double[] forNormal) {
+//        global = curSPD[0];
+//        for(int nomOfMotor=0;nomOfMotor<4;nomOfMotor++){
+//            curWheelPows[nomOfMotor]=forNormal[nomOfMotor];
+//            if(curSPD[nomOfMotor]>global){curWheelPows[nomOfMotor]=forNormal[nomOfMotor]*0.6;
+//            }
+//            else if(curSPD[nomOfMotor]<global){curWheelPows[nomOfMotor]=forNormal[nomOfMotor]*1.4;
+//            }
+//            lasWheelPows[nomOfMotor] = curWheelPows[nomOfMotor];
+//        }
+//    }
     void LiftPow(boolean down,boolean up) {
         if (up) lift.setPower(1);
         else if (down)lift.setPower(-1);
@@ -152,26 +231,26 @@ public class Franke {
     }
     void Servak(boolean dpad_left,boolean dpad_right){
         if (dpad_left){
-        servoLeft.setPosition(0.75);
+            servoLeft.setPosition(0.75);
 //        servoRight.setPosition(rightpos-0.01);
-    }
-    else if (dpad_right) {
+        }
+        else if (dpad_right) {
             servoLeft.setPosition(0);
 //            servoRight.setPosition(rightpos+0.01);
-    }}
+        }}
     void Plecho (double plePower){
 //        int a = 50;
 //        double plePowerF = 0.6*plePower/50;
 //        for(double plePowerL = 0.6*plePower/a;plePowerL<plePower;a--) {
 //            test = plePowerL;
 
-                pleDrive.setPower(plePower);
+        pleDrive.setPower(plePower);
 
 
 //        pleDrive.setPower(0.6*plePower);
     }
     void Vdvig (double vdvigPower){
         vdvig.setPower(vdvigPower);
-    }}
+    }
+  }
 
-    //здесь кончается прекрассное
