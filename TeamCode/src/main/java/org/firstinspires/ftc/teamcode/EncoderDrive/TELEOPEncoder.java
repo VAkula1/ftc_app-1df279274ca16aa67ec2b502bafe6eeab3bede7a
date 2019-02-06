@@ -53,7 +53,7 @@ public class TELEOPEncoder extends OpMode {
         telemetry.addData("time: ",bot.curTime);
         telemetry.update();
         //bot.MechanumY(gamepad1.right_stick_y);
-        bot.MecanumDrive_Cartesian(-gamepad1.right_stick_y,gamepad1.left_stick_x,-gamepad1.right_stick_x);
+        bot.MecanumDriveCartesian(-gamepad1.right_stick_y,gamepad1.left_stick_x,-gamepad1.right_stick_x);
 
         double plePower =-0.5*gamepad2.right_stick_y;
         double vdvig = 0.5*gamepad2.left_stick_x;

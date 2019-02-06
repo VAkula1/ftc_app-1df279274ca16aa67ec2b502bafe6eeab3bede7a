@@ -9,28 +9,33 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class EncoderLib {
     HardwareMap hardwareMap =  null;
-
+    public int TickSM =21;
+    public int TickGR =13;
     double CD[] = new double[4];
     double CD0;double CD1;double CD2;double CD3;
     double lastTime;double curTime;
+
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor left_rear = null;
-    DcMotor right_rear = null;
-    DcMotor left_front = null;
-    DcMotor right_front = null;
-    double[] tick = new double[4];
-    double[] lTick = new double[4];
-    double[] curSPD = new double[4];
+
+    public DcMotor left_rear = null;
+    public DcMotor right_rear = null;
+    public DcMotor left_front = null;
+    public DcMotor right_front = null;
+
+    public double[] tick = new double[4];
+    public double[] lTick = new double[4];
+    public double[] curSPD = new double[4];
     double inWheelPows[] = new double[4];
     double lasWheelPows[] = new double[4];
     double curWheelPows[] = new double[4];
     double norWheelPows[] = new double[4];
-    DcMotor pleDrive = null;
-    DcMotor vdvig = null;
-    double global;
-    DcMotor lift = null;
 
-    DcMotor sosat = null;
+    public DcMotor pleDrive = null;
+    public DcMotor vdvig = null;
+    double global;
+    public DcMotor lift = null;
+
+    public DcMotor sosat = null;
 
 //    DigitalChannel TouchLift;
 //    DigitalChannel TouchVdvig;
@@ -43,13 +48,6 @@ public class EncoderLib {
     double test=0;
     //библиотека функций
     public void init(HardwareMap hardwareMap) {
-//        TouchLift = hardwareMap.get(DigitalChannel.class, "TouchLift");
-//        TouchVdvig = hardwareMap.get(DigitalChannel.class, "TouchVdvig");
-
-//        TouchLift.setMode(DigitalChannel.Mode.INPUT);
-//        TouchVdvig.setMode(DigitalChannel.Mode.INPUT);
-
-
         left_rear = hardwareMap.get(DcMotor.class, "left_rear");
         right_rear = hardwareMap.get(DcMotor.class, "right_rear");
         left_front = hardwareMap.get(DcMotor.class, "left_front");
@@ -105,7 +103,17 @@ public class EncoderLib {
             }
             lastTime=curTime;
             }
-        }
+    }
+
+
+    public int getDeltaSM(int nomOfEncoder){
+        getSPD();
+        return ConvertToSantiSM((int)Math.abs( (tick[nomOfEncoder]-lTick[nomOfEncoder])));
+    }
+    public int getDeltaGrad(int nomOfEncoder){
+        getSPD();
+        return ConvertToGrads((int)Math.abs( (tick[nomOfEncoder]-lTick[nomOfEncoder])));
+    }
 
 
 
@@ -137,7 +145,18 @@ public class EncoderLib {
 
     }
 
-    public void MecanumDrive_Cartesian(double x, double y, double rotation) {
+    public int ConvertToSantiSM(int ticks){
+        int toRet;
+        toRet=ticks/TickSM;
+        return toRet;
+    }
+    public int ConvertToGrads(int ticks){
+        int toRet;
+        toRet=ticks/TickGR;
+        return toRet;
+    }
+
+    public void MecanumDriveCartesian(double x, double y, double rotation) {
         double wheelSpeeds[] = new double[4];
 
         wheelSpeeds[0] = x + y - rotation;
