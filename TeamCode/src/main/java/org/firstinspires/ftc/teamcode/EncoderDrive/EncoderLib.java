@@ -14,13 +14,17 @@ public class EncoderLib {
     double CD[] = new double[4];
     double CD0;double CD1;double CD2;double CD3;
     double lastTime;double curTime;
-
-    private ElapsedTime runtime = new ElapsedTime();
+    double global;
 
     public DcMotor left_rear = null;
     public DcMotor right_rear = null;
     public DcMotor left_front = null;
     public DcMotor right_front = null;
+
+    public DcMotor pleDrive = null;
+    public DcMotor vdvig = null;
+    public DcMotor lift = null;
+    public DcMotor sosat = null;
 
     public double[] tick = new double[4];
     public double[] lTick = new double[4];
@@ -30,13 +34,6 @@ public class EncoderLib {
     double curWheelPows[] = new double[4];
     double norWheelPows[] = new double[4];
 
-    public DcMotor pleDrive = null;
-    public DcMotor vdvig = null;
-    double global;
-    public DcMotor lift = null;
-
-    public DcMotor sosat = null;
-
 //    DigitalChannel TouchLift;
 //    DigitalChannel TouchVdvig;
 
@@ -45,8 +42,7 @@ public class EncoderLib {
     double leftpos = 0;
     int costlV = 0;
     int costlVi = 0;
-    double test=0;
-    //библиотека функций
+    //библиотека функций//////////////////////////////////////////////////////////////////////////////
     public void init(HardwareMap hardwareMap) {
         left_rear = hardwareMap.get(DcMotor.class, "left_rear");
         right_rear = hardwareMap.get(DcMotor.class, "right_rear");
@@ -88,13 +84,6 @@ public class EncoderLib {
         CD0 = 0;CD1 = 0;CD2 = 0;CD3 = 0;
     }
 
-//    public void getSPD(int nomOfEncoder){
-//        if (curTime-lastTime>0.1){
-//            curSPD[nomOfEncodor]=Math.abs((tick[nomOfEncodor]-lTick[nomOfEncodor])/(curTime-lastTime));
-//            lastTime=curTime;lTick[nomOfEncodor]=tick[nomOfEncodor];
-//        }
-//    }
-
     public void getSPD(){
         if (curTime-lastTime>0.1){
             for(int nomOfEncoder=0;nomOfEncoder<4;nomOfEncoder++){
@@ -105,7 +94,6 @@ public class EncoderLib {
             }
     }
 
-
     public int getDeltaSM(int nomOfEncoder){
         getSPD();
         return ConvertToSantiSM((int)Math.abs( (tick[nomOfEncoder]-lTick[nomOfEncoder])));
@@ -114,24 +102,16 @@ public class EncoderLib {
         getSPD();
         return ConvertToGrads((int)Math.abs( (tick[nomOfEncoder]-lTick[nomOfEncoder])));
     }
-
-
-
-//    public void getSPD(){
-//        if (curTime-lastTime>0.1){
-//            curSPDA=Math.abs((tickA-lTickA)/(curTime-lastTime));
-//            curSPDB=Math.abs((tickB-lTickB)/(curTime-lastTime));
-//            curSPDC=Math.abs((tickC-lTickC)/(curTime-lastTime));
-//            curSPDD=Math.abs((tickD-lTickD)/(curTime-lastTime));
-//            lastTime=curTime;lTickA=tickA;lTickB=tickB;lTickC=tickC;lTickD=tickD;
-//        }
-//    }
-
-//    public double NormlazeSPD(){
-//        double
-//        if
-//    }
-
+    public int ConvertToSantiSM(int ticks){
+        int toRet;
+        toRet=ticks/TickSM;
+        return toRet;
+    }
+    public int ConvertToGrads(int ticks){
+        int toRet;
+        toRet=ticks/TickGR;
+        return toRet;
+    }
 
     public void SetDC(boolean mode,boolean x,boolean y,boolean a,boolean b){
         if (mode) {
@@ -143,17 +123,6 @@ public class EncoderLib {
         }
         else CD0 =0;CD1 =0;CD2 =0;CD3 =0;
 
-    }
-
-    public int ConvertToSantiSM(int ticks){
-        int toRet;
-        toRet=ticks/TickSM;
-        return toRet;
-    }
-    public int ConvertToGrads(int ticks){
-        int toRet;
-        toRet=ticks/TickGR;
-        return toRet;
     }
 
     public void MecanumDriveCartesian(double x, double y, double rotation) {
@@ -171,7 +140,6 @@ public class EncoderLib {
         left_rear.setPower(wheelSpeeds[2]+CD2);
         right_rear.setPower(wheelSpeeds[3]+CD3);
     }
-
     private void normalize(double[] wheelSpeeds) {
         double maxMagnitude = Math.abs(wheelSpeeds[0]);
 
@@ -194,6 +162,57 @@ public class EncoderLib {
         }
     }
 
+    public void LiftPow(boolean up,boolean down) {
+        if (down) lift.setPower(1);
+        else if (up)lift.setPower(-1);
+        else lift.setPower(0);
+    }
+    public void Sosatel(boolean vSos,boolean viSos){
+        if(vSos){
+            costlV++;
+            if(costlV%10>5) sosat.setPower(0.25);
+            if(costlV%10<5) sosat.setPower(0);
+//            sosat.setPower(0.5);
+        }
+        else if(viSos){
+            costlVi++;
+            if(costlVi%10>5) sosat.setPower(-0.25);
+            if(costlVi%10<5) sosat.setPower(0);
+//            sosat.setPower(-0.5);
+        }
+    }
+    public void Servak(boolean dpad_left,boolean dpad_right){
+        if (dpad_left){
+            servoLeft.setPosition(0.75);
+//        servoRight.setPosition(rightpos-0.01);
+        }
+        else if (dpad_right) {
+            servoLeft.setPosition(0);
+//            servoRight.setPosition(rightpos+0.01);
+        }}
+    public void Plecho (double plePower){
+//        int a = 50;
+//        double plePowerF = 0.6*plePower/50;
+//        for(double plePowerL = 0.6*plePower/a;plePowerL<plePower;a--) {
+//            test = plePowerL;
+
+        pleDrive.setPower(plePower);
+
+
+//        pleDrive.setPower(0.6*plePower);
+    }
+    public void Vdvig (double vdvigPower){
+        vdvig.setPower(vdvigPower);
+    }
+  }
+
+
+//    public void getSPD(int nomOfEncoder){
+//        if (curTime-lastTime>0.1){
+//            curSPD[nomOfEncodor]=Math.abs((tick[nomOfEncodor]-lTick[nomOfEncodor])/(curTime-lastTime));
+//            lastTime=curTime;lTick[nomOfEncodor]=tick[nomOfEncodor];
+//        }
+//    }
 //    public void MecanumDrive_Cartesian(double x, double y, double rotation) {
 //
 //        inWheelPows[0] = x + y + rotation;
@@ -220,56 +239,18 @@ public class EncoderLib {
 //            lasWheelPows[nomOfMotor] = curWheelPows[nomOfMotor];
 //        }
 //    }
-    void LiftPow(boolean down,boolean up) {
-        if (up) lift.setPower(1);
-        else if (down)lift.setPower(-1);
-        else lift.setPower(0);
-//        if (up) {
-//            lift.setPower(1);
-//        } else if (down) {
-//            lift.setPower(-1);
-//        } else {
-//            lift.setPower(0);
+
+//    public void getSPD(){
+//        if (curTime-lastTime>0.1){
+//            curSPDA=Math.abs((tickA-lTickA)/(curTime-lastTime));
+//            curSPDB=Math.abs((tickB-lTickB)/(curTime-lastTime));
+//            curSPDC=Math.abs((tickC-lTickC)/(curTime-lastTime));
+//            curSPDD=Math.abs((tickD-lTickD)/(curTime-lastTime));
+//            lastTime=curTime;lTickA=tickA;lTickB=tickB;lTickC=tickC;lTickD=tickD;
 //        }
-    }
-    void Sosatel(boolean vSos,boolean viSos){
-        if(vSos){
-            costlV++;
-            if(costlV%2==1) sosat.setPower(0.25);
-            if(costlV%2==0) sosat.setPower(0);
-            SystemClock.sleep(50);
-//            sosat.setPower(0.5);
-        }
-        else if(viSos){
-            costlVi++;
-            if(costlVi%2==1) sosat.setPower(-0.25);
-            if(costlVi%2==0) sosat.setPower(0);
-            SystemClock.sleep(10);
-//            sosat.setPower(-0.5);
-        }
-    }
-    void Servak(boolean dpad_left,boolean dpad_right){
-        if (dpad_left){
-            servoLeft.setPosition(0.75);
-//        servoRight.setPosition(rightpos-0.01);
-        }
-        else if (dpad_right) {
-            servoLeft.setPosition(0);
-//            servoRight.setPosition(rightpos+0.01);
-        }}
-    void Plecho (double plePower){
-//        int a = 50;
-//        double plePowerF = 0.6*plePower/50;
-//        for(double plePowerL = 0.6*plePower/a;plePowerL<plePower;a--) {
-//            test = plePowerL;
+//    }
 
-        pleDrive.setPower(plePower);
-
-
-//        pleDrive.setPower(0.6*plePower);
-    }
-    void Vdvig (double vdvigPower){
-        vdvig.setPower(vdvigPower);
-    }
-  }
-
+//    public double NormlazeSPD(){
+//        double
+//        if
+//    }

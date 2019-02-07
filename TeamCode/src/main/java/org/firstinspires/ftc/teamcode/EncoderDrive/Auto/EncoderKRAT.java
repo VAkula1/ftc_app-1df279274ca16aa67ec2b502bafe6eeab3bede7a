@@ -1,24 +1,19 @@
 package org.firstinspires.ftc.teamcode.EncoderDrive.Auto;
 
-import android.os.SystemClock;
-import com.acmerobotics.roadrunner.drive.MecanumDrive;
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import org.firstinspires.ftc.teamcode.EncoderDrive.EncoderLib;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.EncoderDrive.EncoderLib;
 
-@Autonomous(name="EncoderSimple", group="DogeCV")
-public class EncoderSimple extends LinearOpMode {
+
+@Autonomous(name="EncoderBAZ", group="DogeCV")
+public class EncoderKRAT extends LinearOpMode {
+
     // EN = Encoder
-    double dopDist = 25;
+    double dopDist = 45;
     boolean TuchKru =false;
-
     private ElapsedTime runtime = new ElapsedTime();
     EncoderLib aut = new EncoderLib();
     private void UpDateTM(){
@@ -106,12 +101,12 @@ public class EncoderSimple extends LinearOpMode {
         ResetEN();
     }
     private void Kicking(){
-        MoveToBack(dopDist);
-        Turn(90,false);
+        MoveToFront(dopDist);
+        Turn(70,true);
         MoveToFront(10);
         MoveToBack(10);
-        Turn(90,true);
-        MoveToFront(dopDist);
+        Turn(70,false);
+        MoveToFront(90-dopDist);
     }
     private void Search(){
         //setuping dopDist
@@ -125,14 +120,15 @@ public class EncoderSimple extends LinearOpMode {
     private void ToTravel(){
         Search();
         MoveToFront(35);
-        Turn(90,true);
+        Turn(90,false);
+        MoveToBack(25);
         Kicking();
         MoveToFront(25);
     }//Вторая стадия
     private void TotemLoading(){
-        Turn(45,false);
-        MoveToFront(100);
-        Turn(90,true);
+        Turn(45,true);
+        MoveToFront(80);
+        Turn(90,false);
         MoveToFront(120);
         aut.sosat.setPower(-0.25);
         sleep(1000);
@@ -166,5 +162,6 @@ public class EncoderSimple extends LinearOpMode {
             break;
         }
     }
+
 }
 
