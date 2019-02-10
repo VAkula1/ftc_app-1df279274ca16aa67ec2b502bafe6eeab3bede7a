@@ -81,15 +81,17 @@ public class ScanServo extends LinearOpMode {
         while(opModeIsActive()){
 
 
-            if (gamepad1.a){
-                leftpos +=0.01;
-                rightpos -=0.01;
-                }
-             else if (gamepad1.b) {
-                leftpos -=0.01 ;
-                rightpos +=0.01 ;
-                }
+            if (gamepad1.a){leftpos +=0.005;}
+            if (gamepad1.x) {rightpos -=0.005 ;}
+            if (gamepad1.b) {leftpos -=0.005 ;}
+            if (gamepad1.y) {rightpos +=0.005 ;}
+            if (gamepad1.dpad_up){leftpos =1;rightpos = 0;}
+            if (gamepad1.dpad_down){leftpos =0;rightpos = 1;}
 
+            if (gamepad1.right_bumper){leftpos =0;rightpos = 0;}
+
+            telemetry.addData("leftPos",leftpos);
+            telemetry.addData("rightPos",rightpos);
             telemetry.update();
 
 

@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.EncoderDrive;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+@Disabled
 @TeleOp(name="TELEOPEncoderMode", group="Iterative Opmode")
 public class TELEOPEncoderMode extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
@@ -61,12 +62,12 @@ public class TELEOPEncoderMode extends OpMode {
         double plePower =-0.5*gamepad2.right_stick_y;
         double vdvig = 0.5*gamepad2.left_stick_x;
 
-        bot.LiftPow(gamepad1.dpad_up,gamepad1.dpad_down);
-        bot.Sosatel(gamepad2.y,gamepad2.a);
-        bot.Servak(gamepad2.x,gamepad2.b);
-
-        bot.Plecho(plePower);
+        bot.Hook(gamepad1.dpad_up,gamepad1.dpad_down);
+        bot.Pickpos(gamepad2.y,gamepad2.a);
+        bot.ServPick(gamepad2.dpad_left,gamepad2.dpad_right);
+        bot.Slider(plePower);
         bot.Vdvig(vdvig);
+
 //        if (bot.TouchLift.getState() == true) {
 //            bot.lift.setPower(0);
 //            telemetry.addData("TouchLift", "Is Not Pressed"); }

@@ -67,7 +67,7 @@ public class VuforiaNavigation extends LinearOpMode {
                 "NUWndrIRaL7DQXhD2F4ut0N739aGN6kDO9QpFzhkhyJDJ4MktcKeoy7Qgc0tSYofkBHUowzOrzS8hW1hs" +
                 "Aq2S0oyCb6LZEMnbEjI8mUnYV2joSRqm5f2RTSDC1TzP8Hc7npykxT8eMQucj+VkBGsFSuFy/SnksJpVp" +
                 "7Zuq8bNPhpTVIEHQ9UHU9km8RjCpoUqFxUKUMZcTPf/jZ2uV6bQxGmoo0CncW6Fa7vV2HWl/lbgL8NlVJ" +
-                "92ph9g7B7DF1V+mQhgAtVEfQe20QQEliPg0KAlJpLHDBg8muHokO3KMc1f6Qsuks+qZMqX9nzsnrZv0\n";
+                "92ph9g7B7DF1V+mQhgAtVEfQe20QQEliPg0KAlJpLHDBg8muHokO3KMc1f6Qsuks+qZMqX9nzsnrZv0";
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
 

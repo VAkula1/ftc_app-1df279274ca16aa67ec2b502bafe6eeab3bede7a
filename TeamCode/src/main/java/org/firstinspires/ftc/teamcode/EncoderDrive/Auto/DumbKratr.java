@@ -4,18 +4,40 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import org.firstinspires.ftc.teamcode.EncoderDrive.EncoderLib;
+import org.firstinspires.ftc.teamcode.WebCa.DetectionLib;
 
-
-@Autonomous(name="EncoderBAZ", group="DogeCV")
-public class EncoderBAZ extends LinearOpMode {
-
+@Autonomous public class DumbKratr extends LinearOpMode {
     // EN = Encoder
-    double dopDist = 50;
+    double dopDist = 45;
     boolean TuchKru =false;
     private ElapsedTime runtime = new ElapsedTime();
     EncoderLib aut = new EncoderLib();
+    private void initVuforia() {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = detector.VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        detector.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+    }
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        detector.tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, detector.vuforia);
+        detector.tfod.loadModelFromAsset(detector.TFOD_MODEL_ASSET, detector.LABEL_GOLD_MINERAL, detector.LABEL_SILVER_MINERAL);
+    }
+
+    DetectionLib detector = new DetectionLib();
+    private void Cold(){
+        sleep(1000);
+    }
     private void UpDateTM(){
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -54,6 +76,7 @@ public class EncoderBAZ extends LinearOpMode {
         }
         setAllTZero();
         ResetEN();
+        Cold();
     }
     private void MoveToBack(double inSM){
         while ((aut.getDeltaSM(0)<inSM)&&(opModeIsActive())){
@@ -63,6 +86,7 @@ public class EncoderBAZ extends LinearOpMode {
         }
         setAllTZero();
         ResetEN();
+        Cold();
     }
     private void MoveBoch(double inSM, boolean right){
         if (right) {
@@ -81,6 +105,7 @@ public class EncoderBAZ extends LinearOpMode {
         }
         setAllTZero();
         ResetEN();
+        Cold();
     }
     private void Turn (double inGrad, boolean right){
         if (right) {
@@ -99,6 +124,7 @@ public class EncoderBAZ extends LinearOpMode {
         }
         setAllTZero();
         ResetEN();
+        Cold();
     }
     private void Kicking(){
         MoveToFront(dopDist);
@@ -109,17 +135,32 @@ public class EncoderBAZ extends LinearOpMode {
         MoveToFront(90-dopDist);
     }
     private void Search(){
-        //setuping dopDist
+        Turn(20,true);
+        detector.SetXPos();
+        if(detector.goldHere){
+            Turn(20,false);
+            dopDist = 0;
+        }
+        else{
+            Turn(40,false);
+            detector.SetXPos();
+            if(detector.goldHere){
+                Turn(20,true);
+            }
+            else{
+                dopDist = 90;
+                Turn(20,true);
+            }
+        }
     }
 
     private void Lending(){
-
-        while (TuchKru) aut.LiftPow(false,true);
+        //while (TuchKru) aut.Hook(false,true);
         MoveBoch(5,true);
+        Search();
     }// Первая сладия
     private void ToTravel(){
-        Search();
-        MoveToFront(35);
+        MoveToFront(15);
         Turn(90,false);
         MoveToBack(25);
         Kicking();
@@ -128,21 +169,24 @@ public class EncoderBAZ extends LinearOpMode {
     private void TotemLoading(){
         Turn(45,true);
         MoveToFront(80);
-        Turn(90,true);
+        Turn(90,false);
         MoveToFront(120);
-        aut.sosat.setPower(-0.25);
-        sleep(1000);
-        aut.sosat.setPower(0);
+        aut.Pickpos(true,false);
+        sleep(1100);
+        aut.Pickpos(false,true);
     }//Третья стадия
     private void KratStoping(){
-        MoveToBack(180);
         Turn(90,true);
-        aut.pleDrive.setPower(0.5);
-        sleep(500);
-        aut.pleDrive.setPower(0);
+        MoveToFront(100);
+//        aut.Vdvig(0.5);
+//        sleep(500);
+//        aut.Vdvig(0);
     }//Четвёртая стадия
     @Override
     public void runOpMode() {
+        detector.IninDetector();
+        initVuforia();
+        initTfod();
         aut.init(hardwareMap);
         aut.tick[0] = aut.left_front.getCurrentPosition();
         aut.tick[1] = aut.right_front.getCurrentPosition();
@@ -157,10 +201,8 @@ public class EncoderBAZ extends LinearOpMode {
             UpDateTM();
             Lending();
             ToTravel();
-            TotemLoading();
             KratStoping();
             break;
         }
     }
 }
-

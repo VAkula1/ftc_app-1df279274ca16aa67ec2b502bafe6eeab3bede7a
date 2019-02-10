@@ -12,15 +12,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.EncoderDrive.EncoderLib;
 import org.firstinspires.ftc.teamcode.WebCa.DetectionLib;
 
-
-@Autonomous(name="EncoderBAZ", group="DogeCV")
-public class EncoderKRAT extends LinearOpMode {
+@Autonomous public class DumbBaz extends LinearOpMode {
 
     // EN = Encoder
-    double dopDist = 45;
-    boolean TuchKru =false;
-    private ElapsedTime runtime = new ElapsedTime();
-    EncoderLib aut = new EncoderLib();
     private void initVuforia() {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
@@ -37,7 +31,11 @@ public class EncoderKRAT extends LinearOpMode {
         detector.tfod.loadModelFromAsset(detector.TFOD_MODEL_ASSET, detector.LABEL_GOLD_MINERAL, detector.LABEL_SILVER_MINERAL);
     }
 
+    double dopDist = 45;
+    boolean TuchKru =false;
+    private ElapsedTime runtime = new ElapsedTime();
     DetectionLib detector = new DetectionLib();
+    EncoderLib aut = new EncoderLib();
     private void Cold(){
         sleep(1000);
     }
@@ -142,7 +140,7 @@ public class EncoderKRAT extends LinearOpMode {
         detector.SetXPos();
         if(detector.goldHere){
             Turn(20,false);
-            dopDist = 0;
+            dopDist = 90;
         }
         else{
             Turn(40,false);
@@ -151,7 +149,7 @@ public class EncoderKRAT extends LinearOpMode {
                 Turn(20,true);
             }
             else{
-                dopDist = 90;
+                dopDist = 0;
                 Turn(20,true);
             }
         }
@@ -164,23 +162,23 @@ public class EncoderKRAT extends LinearOpMode {
     }// Первая сладия
     private void ToTravel(){
         MoveToFront(15);
-        Turn(90,false);
-        MoveToBack(25);
+        Turn(90,true);
+        MoveToBack(60);
         Kicking();
         MoveToFront(25);
     }//Вторая стадия
     private void TotemLoading(){
-        Turn(45,true);
-        MoveToFront(80);
         Turn(90,false);
-        MoveToFront(120);
+        MoveToFront(80);
+        Turn(45,false);
+        MoveToFront(45);
         aut.Pickpos(true,false);
         sleep(1100);
         aut.Pickpos(false,true);
-        Turn(180,true);
+        Turn(80,false);
     }//Третья стадия
     private void KratStoping(){
-        MoveToBack(180);
+        MoveToFront(200);
 //        aut.Vdvig(0.5);
 //        sleep(500);
 //        aut.Vdvig(0);
@@ -209,6 +207,4 @@ public class EncoderKRAT extends LinearOpMode {
             break;
         }
     }
-
 }
-

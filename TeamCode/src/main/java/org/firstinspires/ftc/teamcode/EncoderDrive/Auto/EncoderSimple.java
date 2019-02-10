@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name="EncoderSimple", group="DogeCV")
 public class EncoderSimple extends LinearOpMode {
     // EN = Encoder
-    double dopDist = 25;
+    double dopDist = 45;
     boolean TuchKru =false;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -119,7 +119,7 @@ public class EncoderSimple extends LinearOpMode {
 
     private void Lending(){
 
-        while (TuchKru) aut.LiftPow(false,true);
+        while (TuchKru) aut.Hook(false,true);
         MoveBoch(5,true);
     }// Первая сладия
     private void ToTravel(){
@@ -134,16 +134,16 @@ public class EncoderSimple extends LinearOpMode {
         MoveToFront(100);
         Turn(90,true);
         MoveToFront(120);
-        aut.sosat.setPower(-0.25);
-        sleep(1000);
-        aut.sosat.setPower(0);
+        aut.Pickpos(true,false);
+        sleep(1100);
+        aut.Pickpos(false,true);
     }//Третья стадия
     private void KratStoping(){
         MoveToBack(180);
         Turn(90,true);
-        aut.pleDrive.setPower(0.5);
+        aut.Vdvig(0.5);
         sleep(500);
-        aut.pleDrive.setPower(0);
+        aut.Vdvig(0);
     }//Четвёртая стадия
     @Override
     public void runOpMode() {

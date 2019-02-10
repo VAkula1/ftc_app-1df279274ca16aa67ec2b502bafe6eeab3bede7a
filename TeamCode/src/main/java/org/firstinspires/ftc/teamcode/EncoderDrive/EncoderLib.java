@@ -21,10 +21,10 @@ public class EncoderLib {
     public DcMotor left_front = null;
     public DcMotor right_front = null;
 
-    public DcMotor pleDrive = null;
-    public DcMotor vdvig = null;
-    public DcMotor lift = null;
-    public DcMotor sosat = null;
+    public DcMotor leftSlider = null;
+    public DcMotor rightSlider = null;
+    public DcMotor giraffe = null;
+    public DcMotor hook = null;
 
     public double[] tick = new double[4];
     public double[] lTick = new double[4];
@@ -37,13 +37,19 @@ public class EncoderLib {
 //    DigitalChannel TouchLift;
 //    DigitalChannel TouchVdvig;
 
-    Servo servoLeft;
-
-    double leftpos = 0;
+    public Servo servoLeft;
+    public Servo servoRight;
+    public Servo servoPick;
+    public double leftpos;
+    public double rightpos;
+    public double pickpos;
     int costlV = 0;
     int costlVi = 0;
     //библиотека функций//////////////////////////////////////////////////////////////////////////////
     public void init(HardwareMap hardwareMap) {
+        leftpos = 0;
+        rightpos = 1;
+        pickpos = 0;
         left_rear = hardwareMap.get(DcMotor.class, "left_rear");
         right_rear = hardwareMap.get(DcMotor.class, "right_rear");
         left_front = hardwareMap.get(DcMotor.class, "left_front");
@@ -64,15 +70,14 @@ public class EncoderLib {
         right_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        pleDrive = hardwareMap.get(DcMotor.class, "ple_drive");
-        vdvig = hardwareMap.get(DcMotor.class, "vdvig_drive");
-
-        lift = hardwareMap.get(DcMotor.class, "lift");
-
+        leftSlider = hardwareMap.get(DcMotor.class, "leftSlider");
+        rightSlider = hardwareMap.get(DcMotor.class, "rightSlider");
+        giraffe = hardwareMap.get(DcMotor.class, "giraffe");
+        hook = hardwareMap.get(DcMotor.class, "hook");
         //servo = hardwareMap.get(Servo.class, "servo");
         servoLeft = hardwareMap.get(Servo.class, "servoLeft");
-
-        sosat = hardwareMap.get(DcMotor.class, "sosat");
+        servoRight = hardwareMap.get(Servo.class, "servoRight");
+        servoPick = hardwareMap.get(Servo.class, "servoPick");
 
         left_rear.setDirection(DcMotor.Direction.FORWARD);
         right_rear.setDirection(DcMotor.Direction.REVERSE);
@@ -128,17 +133,17 @@ public class EncoderLib {
     public void MecanumDriveCartesian(double x, double y, double rotation) {
         double wheelSpeeds[] = new double[4];
 
-        wheelSpeeds[0] = x + y - rotation;
-        wheelSpeeds[1] = -x + y - rotation;
-        wheelSpeeds[2] = -x + y + rotation;
-        wheelSpeeds[3] = x + y + rotation;
+        wheelSpeeds[0] =-y-x+rotation ;//-y-x ;
+        wheelSpeeds[1] =y-x+rotation ;//y-x;
+        wheelSpeeds[2] =y-x-rotation ;//y-x;
+        wheelSpeeds[3] =-y-x-rotation ;//-y-x;
 
         normalize(wheelSpeeds);
 
-        left_front.setPower(wheelSpeeds[0]+CD0);
-        right_front.setPower(wheelSpeeds[1]+CD1);
-        left_rear.setPower(wheelSpeeds[2]+CD2);
-        right_rear.setPower(wheelSpeeds[3]+CD3);
+        left_front.setPower(wheelSpeeds[0]);
+        right_front.setPower(wheelSpeeds[1]);
+        left_rear.setPower(wheelSpeeds[2]);
+        right_rear.setPower(wheelSpeeds[3]);
     }
     private void normalize(double[] wheelSpeeds) {
         double maxMagnitude = Math.abs(wheelSpeeds[0]);
@@ -162,47 +167,34 @@ public class EncoderLib {
         }
     }
 
-    public void LiftPow(boolean up,boolean down) {
-        if (down) lift.setPower(1);
-        else if (up)lift.setPower(-1);
-        else lift.setPower(0);
+    public void Hook(boolean up,boolean down) {
+        if (down) hook.setPower(1);
+        else if (up)hook.setPower(-1);
+        else hook.setPower(0);
     }
-    public void Sosatel(boolean vSos,boolean viSos){
-        if(vSos){
-            costlV++;
-            if(costlV%10>5) sosat.setPower(0.25);
-            if(costlV%10<5) sosat.setPower(0);
-//            sosat.setPower(0.5);
+
+    public void ServPick(boolean left,boolean right){
+        if (left){pickpos =1;}
+        if (right){pickpos =0;}
+    }
+
+    public void Pickpos(boolean up,boolean down){
+        if (up){leftpos =0.6;rightpos =0.4;
+            if(leftpos >0.6)leftpos=0.6;
+            if(rightpos <0.4)rightpos =0.4;
         }
-        else if(viSos){
-            costlVi++;
-            if(costlVi%10>5) sosat.setPower(-0.25);
-            if(costlVi%10<5) sosat.setPower(0);
-//            sosat.setPower(-0.5);
+        if (down){leftpos =0;rightpos =1;
+            if(leftpos <0)leftpos=0;
+            if(rightpos >1)rightpos =1;
         }
     }
-    public void Servak(boolean dpad_left,boolean dpad_right){
-        if (dpad_left){
-            servoLeft.setPosition(0.75);
-//        servoRight.setPosition(rightpos-0.01);
-        }
-        else if (dpad_right) {
-            servoLeft.setPosition(0);
-//            servoRight.setPosition(rightpos+0.01);
-        }}
-    public void Plecho (double plePower){
-//        int a = 50;
-//        double plePowerF = 0.6*plePower/50;
-//        for(double plePowerL = 0.6*plePower/a;plePowerL<plePower;a--) {
-//            test = plePowerL;
+    public void Slider (double sliderPower){
+        leftSlider.setPower(sliderPower);
+        rightSlider.setPower(-sliderPower);
 
-        pleDrive.setPower(plePower);
-
-
-//        pleDrive.setPower(0.6*plePower);
     }
     public void Vdvig (double vdvigPower){
-        vdvig.setPower(vdvigPower);
+        giraffe.setPower(-vdvigPower);
     }
   }
 
