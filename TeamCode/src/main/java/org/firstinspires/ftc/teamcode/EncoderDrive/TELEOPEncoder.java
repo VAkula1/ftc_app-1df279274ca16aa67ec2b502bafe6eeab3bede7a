@@ -22,6 +22,8 @@ public class TELEOPEncoder extends OpMode {
     @Override
     public void loop() {
 
+        double x;double y; double r;
+
         bot.tick[0] = bot.left_front.getCurrentPosition();
         bot.tick[1] = bot.right_front.getCurrentPosition();
         bot.tick[2] = bot.left_rear.getCurrentPosition();
@@ -30,30 +32,36 @@ public class TELEOPEncoder extends OpMode {
         bot.curTime = runtime.time();
         bot.SetDC(false,gamepad1.x,gamepad1.y,gamepad1.a,gamepad1.b);
 
+        x = -gamepad1.right_stick_x; y =gamepad1.left_stick_y; r =-gamepad1.left_stick_x;
 //        for(int nomOfMotor=0;nomOfMotor<4;nomOfMotor++){
 //            bot.getSPD(nomOfMotor);
 //        }
 
         bot.getSPD();
 
-        telemetry.addData("deltaTick[0]",Math.abs(bot.tick[0]-bot.lTick[0]));
-        telemetry.addData("deltaTick[1]",Math.abs(bot.tick[1]-bot.lTick[1]));
-        telemetry.addData("deltaTick[2]",Math.abs(bot.tick[2]-bot.lTick[2]));
-        telemetry.addData("deltaTick[3]",Math.abs(bot.tick[3]-bot.lTick[3]));
+//        telemetry.addData("deltaTick[0]",Math.abs(bot.tick[0]-bot.lTick[0]));
+//        telemetry.addData("deltaTick[1]",Math.abs(bot.tick[1]-bot.lTick[1]));
+//        telemetry.addData("deltaTick[2]",Math.abs(bot.tick[2]-bot.lTick[2]));
+//        telemetry.addData("deltaTick[3]",Math.abs(bot.tick[3]-bot.lTick[3]));
+//
+//        telemetry.addData("tickA l",bot.lTick[0]);
+//        telemetry.addData("tickB l",bot.lTick[1]);
+//        telemetry.addData("tickC l",bot.lTick[2]);
+//        telemetry.addData("tickD l",bot.lTick[3]);
+//
+//        telemetry.addData("SPDA: ",bot.curSPD[0]);
+//        telemetry.addData("SPDB: ",bot.curSPD[1]);
+//        telemetry.addData("SPDC: ",bot.curSPD[2]);
+//        telemetry.addData("SPDD: ",bot.curSPD[3]);
 
-        telemetry.addData("tickA l",bot.lTick[0]);
-        telemetry.addData("tickB l",bot.lTick[1]);
-        telemetry.addData("tickC l",bot.lTick[2]);
-        telemetry.addData("tickD l",bot.lTick[3]);
-
-        telemetry.addData("SPDA: ",bot.curSPD[0]);
-        telemetry.addData("SPDB: ",bot.curSPD[1]);
-        telemetry.addData("SPDC: ",bot.curSPD[2]);
-        telemetry.addData("SPDD: ",bot.curSPD[3]);
+        telemetry.addData("x: ",x);
+        telemetry.addData("y: ",y);
+        telemetry.addData("r: ",r);
         telemetry.addData("time: ",bot.curTime);
         telemetry.update();
         //bot.MechanumY(gamepad1.right_stick_y);
-        bot.MecanumDriveCartesian(-gamepad1.right_stick_x,gamepad1.left_stick_y,-gamepad1.left_stick_x);
+
+        bot.MecanumDriveCartesian(x,y,r);
 
         double plePower =-0.4*gamepad2.right_stick_y;
         double vdvig = gamepad2.left_stick_x;

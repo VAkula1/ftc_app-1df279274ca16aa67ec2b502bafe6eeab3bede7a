@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
-import org.firstinspires.ftc.teamcode.EncoderDrive.EncoderLib;
+import org.firstinspires.ftc.teamcode.EncoderDrive.Auto.AutoLib;
 import org.firstinspires.ftc.teamcode.WebCa.DetectionLib;
 
 @Autonomous public class DumbKratr extends LinearOpMode {
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.WebCa.DetectionLib;
     double dopDist = 45;
     boolean TuchKru =false;
     private ElapsedTime runtime = new ElapsedTime();
-    EncoderLib aut = new EncoderLib();
+    AutoLib aut = new AutoLib();
     private void initVuforia() {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 

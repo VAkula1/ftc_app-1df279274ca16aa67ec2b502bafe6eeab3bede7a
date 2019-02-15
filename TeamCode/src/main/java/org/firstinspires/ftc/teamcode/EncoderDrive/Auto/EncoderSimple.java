@@ -7,7 +7,7 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import org.firstinspires.ftc.teamcode.EncoderDrive.EncoderLib;
+import org.firstinspires.ftc.teamcode.EncoderDrive.Auto.AutoLib;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,7 +20,7 @@ public class EncoderSimple extends LinearOpMode {
     boolean TuchKru =false;
 
     private ElapsedTime runtime = new ElapsedTime();
-    EncoderLib aut = new EncoderLib();
+    AutoLib aut = new AutoLib();
     private void UpDateTM(){
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());

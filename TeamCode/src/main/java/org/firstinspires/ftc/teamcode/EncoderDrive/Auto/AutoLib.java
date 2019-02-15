@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.EncoderDrive;
+package org.firstinspires.ftc.teamcode.EncoderDrive.Auto;
 
 import android.os.SystemClock;
 
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class EncoderLib {
+public class AutoLib {
     HardwareMap hardwareMap =  null;
     public int TickSM =21;
     public int TickGR =13;
@@ -87,8 +87,6 @@ public class EncoderLib {
         curSPD[0]=0;curSPD[1]=0;curSPD[2]=0;curSPD[3]=0;
         CD[0] =0;CD[1] =0;CD[2] =0;CD[3] =0;
         CD0 = 0;CD1 = 0;CD2 = 0;CD3 = 0;
-
-
     }
 
     public void getSPD(){
@@ -135,10 +133,10 @@ public class EncoderLib {
     public void MecanumDriveCartesian(double x, double y, double rotation) {
         double wheelSpeeds[] = new double[4];
 
-        wheelSpeeds[0] =-y-x+rotation ;//-y-x ;
-        wheelSpeeds[1] =y-x+rotation ;//y-x;
-        wheelSpeeds[2] =y-x-rotation ;//y-x;
-        wheelSpeeds[3] =-y-x-rotation ;//-y-x;
+        wheelSpeeds[0] =y+x-rotation ;//-y-x+r;
+        wheelSpeeds[1] =-y+x-rotation ;//y-x+r;
+        wheelSpeeds[2] =-y+x+rotation ;//y-x-r;
+        wheelSpeeds[3] =y+x+rotation ;//-y-x-r;
 
         normalize(wheelSpeeds);
 
@@ -200,51 +198,3 @@ public class EncoderLib {
     }
   }
 
-
-//    public void getSPD(int nomOfEncoder){
-//        if (curTime-lastTime>0.1){
-//            curSPD[nomOfEncodor]=Math.abs((tick[nomOfEncodor]-lTick[nomOfEncodor])/(curTime-lastTime));
-//            lastTime=curTime;lTick[nomOfEncodor]=tick[nomOfEncodor];
-//        }
-//    }
-//    public void MecanumDrive_Cartesian(double x, double y, double rotation) {
-//
-//        inWheelPows[0] = x + y + rotation;
-//        inWheelPows[1] = -x + y - rotation;
-//        inWheelPows[2] = -x + y + rotation;
-//        inWheelPows[3] = x + y - rotation;
-//
-//        normalize(lasWheelPows);
-//
-//        left_front.setPower(curWheelPows[0]);
-//        right_front.setPower(curWheelPows[1]);
-//        left_rear.setPower(curWheelPows[2]);
-//        right_rear.setPower(curWheelPows[3]);
-//    }
-//
-//    private void normalize(double[] forNormal) {
-//        global = curSPD[0];
-//        for(int nomOfMotor=0;nomOfMotor<4;nomOfMotor++){
-//            curWheelPows[nomOfMotor]=forNormal[nomOfMotor];
-//            if(curSPD[nomOfMotor]>global){curWheelPows[nomOfMotor]=forNormal[nomOfMotor]*0.6;
-//            }
-//            else if(curSPD[nomOfMotor]<global){curWheelPows[nomOfMotor]=forNormal[nomOfMotor]*1.4;
-//            }
-//            lasWheelPows[nomOfMotor] = curWheelPows[nomOfMotor];
-//        }
-//    }
-
-//    public void getSPD(){
-//        if (curTime-lastTime>0.1){
-//            curSPDA=Math.abs((tickA-lTickA)/(curTime-lastTime));
-//            curSPDB=Math.abs((tickB-lTickB)/(curTime-lastTime));
-//            curSPDC=Math.abs((tickC-lTickC)/(curTime-lastTime));
-//            curSPDD=Math.abs((tickD-lTickD)/(curTime-lastTime));
-//            lastTime=curTime;lTickA=tickA;lTickB=tickB;lTickC=tickC;lTickD=tickD;
-//        }
-//    }
-
-//    public double NormlazeSPD(){
-//        double
-//        if
-//    }

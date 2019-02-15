@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
-import org.firstinspires.ftc.teamcode.EncoderDrive.EncoderLib;
+import org.firstinspires.ftc.teamcode.EncoderDrive.Auto.AutoLib;
 import org.firstinspires.ftc.teamcode.WebCa.DetectionLib;
 
 
@@ -37,7 +37,7 @@ public class EncoderBASE extends LinearOpMode {
     boolean TuchKru =false;
     private ElapsedTime runtime = new ElapsedTime();
     DetectionLib detector = new DetectionLib();
-    EncoderLib aut = new EncoderLib();
+    AutoLib aut = new AutoLib();
     private void Cold(){
         sleep(1000);
     }
@@ -161,7 +161,7 @@ public class EncoderBASE extends LinearOpMode {
         //while (TuchKru) aut.Hook(false,true);
         MoveBoch(5,true);
         Search();
-    }// Первая сладия
+    }// Первая стадия
     private void ToTravel(){
         MoveToFront(15);
         Turn(90,true);
